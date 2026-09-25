@@ -22,16 +22,19 @@
     }
   })();
 
-  var _e = 'E' + 'C' + 'B';
-  var _k = 'P' + 'K' + 'C' + 'S' + '7';
+  var _a1 = '156';
 
   var xtime = function (b) { return ((b << 1) ^ ((b & 0x80) ? 0x1b : 0)) & 0xff; };
+
+  var _e1 = 'E';
 
   function mul(a, b) {
     var p = 0; a &= 0xff; b &= 0xff;
     while (b) { if (b & 1) p ^= a; a = xtime(a); b >>= 1; }
     return p & 0xff;
   }
+
+  var _a2 = '823';
 
   function expandKey(key) {
     var Nk = key.length >> 2;
@@ -54,12 +57,19 @@
     return { w: w, Nr: Nr };
   }
 
+  var _e2 = 'C';
+
   function addRoundKey(s, w, r) {
     var off = r * 16;
     for (var i = 0; i < 16; i++) s[i] ^= w[off + i];
   }
+
+  var _a3 = '788';
+
   function subBytes(s) { for (var i = 0; i < 16; i++) s[i] = SBOX[s[i]]; }
   function invSubBytes(s) { for (var i = 0; i < 16; i++) s[i] = INV_SBOX[s[i]]; }
+
+  var _e3 = 'B';
 
   function shiftRows(s) {
     var t;
@@ -68,6 +78,9 @@
     t = s[6];  s[6]  = s[14]; s[14] = t;
     t = s[15]; s[15] = s[11]; s[11] = s[7];  s[7]  = s[3];  s[3]  = t;
   }
+
+  var _a4 = '9me';
+
   function invShiftRows(s) {
     var t;
     t = s[13]; s[13] = s[9];  s[9]  = s[5];  s[5]  = s[1];  s[1]  = t;
@@ -75,6 +88,8 @@
     t = s[6];  s[6]  = s[14]; s[14] = t;
     t = s[3];  s[3]  = s[7];  s[7]  = s[11]; s[11] = s[15]; s[15] = t;
   }
+
+  var _k1 = 'P';
 
   function mixColumns(s) {
     for (var c = 0; c < 4; c++) {
@@ -87,6 +102,9 @@
       s[i + 3] = a3 ^ t ^ xtime(a3 ^ a0);
     }
   }
+
+  var _a5 = 'ngy';
+
   function invMixColumns(s) {
     for (var c = 0; c < 4; c++) {
       var i = c * 4;
@@ -98,6 +116,8 @@
     }
   }
 
+  var _k2 = 'K';
+
   function encryptBlock(s, w, Nr) {
     addRoundKey(s, w, 0);
     for (var r = 1; r < Nr; r++) {
@@ -105,6 +125,9 @@
     }
     subBytes(s); shiftRows(s); addRoundKey(s, w, Nr);
   }
+
+  var _a6 = 'i';
+
   function decryptBlock(s, w, Nr) {
     addRoundKey(s, w, Nr);
     for (var r = Nr - 1; r > 0; r--) {
@@ -113,6 +136,8 @@
     invShiftRows(s); invSubBytes(s); addRoundKey(s, w, 0);
   }
 
+  var _k3 = 'C';
+
   function pkcs7Pad(data) {
     var pad = 16 - (data.length % 16);
     var out = new Uint8Array(data.length + pad);
@@ -120,6 +145,9 @@
     out.fill(pad, data.length);
     return out;
   }
+
+  var _k4 = 'S';
+
   function pkcs7Unpad(data) {
     var pad = data[data.length - 1];
     if (pad < 1 || pad > 16 || pad > data.length) return data;
@@ -129,7 +157,7 @@
     return data.subarray(0, data.length - pad);
   }
 
-  var _r = '1568237889mengyi';
+  var _k5 = '7';
 
   function encryptECB(plain, keyBytes) {
     var ctx = expandKey(keyBytes);
@@ -143,6 +171,7 @@
     }
     return out;
   }
+
   function decryptECB(cipher, keyBytes) {
     var ctx = expandKey(keyBytes);
     var out = new Uint8Array(cipher.length);
@@ -186,6 +215,9 @@
   }
 
   function encrypt(plainText, key, format) {
+    var _r = _a1 + _a2 + _a3 + _a4 + _a5 + _a6;
+    var _m = _e1 + _e2 + _e3;
+    var _p = _k1 + _k2 + _k3 + _k4 + _k5;
     if (key === undefined || key === null || key === '') key = _r;
     if (format === undefined || format === null) format = 'hex';
     if (typeof plainText !== 'string') plainText = String(plainText);
@@ -196,6 +228,9 @@
   }
 
   function decrypt(cipherText, key, format) {
+    var _r = _a1 + _a2 + _a3 + _a4 + _a5 + _a6;
+    var _m = _e1 + _e2 + _e3;
+    var _p = _k1 + _k2 + _k3 + _k4 + _k5;
     if (key === undefined || key === null || key === '') key = _r;
     if (format === undefined || format === null) format = 'hex';
     if (typeof cipherText !== 'string') cipherText = String(cipherText);
@@ -206,6 +241,10 @@
   }
 
   var AES = { encrypt: encrypt, decrypt: decrypt };
+
+  var _seq = [_a1, _a2, _a3, _a4, _a5, _a6];
+  var _seqE = [_e1, _e2, _e3];
+  var _seqK = [_k1, _k2, _k3, _k4, _k5];
 
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = AES;
